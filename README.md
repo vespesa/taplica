@@ -1,7 +1,11 @@
 # Taplica
 
 An extremely simple wrapper for `tap>` that taps data into an
-atom and makes it accessible from REPL.
+atom and makes it accessible from REPL. The idea is to provide
+no-boilerplate tapping support without leaving Emacs and Cider.
+
+> [!NOTE]
+> Taplica is not yet in Clojars
 
 ## Usage
 Taplica provides two tap functions: `tap>>` and `tap!`. Both take the
@@ -59,9 +63,7 @@ true
 {}
 > (t/values)
 {}
-> (t/pause)
-{:added? false, :state :paused}
-> (t/pause)
+()> (t/pause)
 nil
 > (t/tap>> :one 1)
 nil
