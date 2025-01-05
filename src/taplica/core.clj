@@ -36,19 +36,20 @@
         (tap> {:path       path
                :value      value
                :overwrite? overwrite?
-               ::taplica?  true})))))
+               ::taplica?  true})))
+    value))
 
 (defn tap!
   "Replaces the currently tapped value for the value path. Last arg is the value and the
   preceding items are considered its path. If there is only one (value) argument, it is
-  stored into an empty path `[]`."
+  stored into an empty path `[]`. Returns tapped value (or throws if stopped)."
   [& args]
   (tap-and-add-if-needed true args))
 
 (defn tap>>
   "Adds the tapped value to the earlier taps for the same path. Last arg is the value and
   the preceding items are considered its path. If there is only one (value) argument, it
-  is stored into empty path `[]`."
+  is stored into empty path `[]`. Returns tapped value (or throws if stopped)."
   [& args]
   (tap-and-add-if-needed false args))
 

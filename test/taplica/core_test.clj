@@ -6,6 +6,11 @@
 
 (set! *warn-on-reflection* true)
 
+(defn sleep
+  "Wait a while for the `tap>` to go through."
+  []
+  (Thread/sleep 100))
+
 (use-fixtures :once (fn [f]
                       (t/reset)
                       (f)))
@@ -15,11 +20,11 @@
     (is (empty? (t/values))))
 
   (testing "tap>>"
-    (t/tap>> "one")
-    (t/tap>> "two")
-    (t/tap>> :foo :bar "three")
-    (t/tap>> [:foo :bar] "four")
-    (Thread/sleep 1000)
+    (is (= "one" (t/tap>> "one")))
+    (is (= "two" (t/tap>> "two")))
+    (is (= "three" (t/tap>> :foo :bar "three")))
+    (is (= "four" (t/tap>> [:foo :bar] "four")))
+    (sleep)
     (is (= {[]          ["one" "two"]
             [:foo :bar] ["three" "four"]}
            (t/values))))
@@ -46,29 +51,29 @@
     (is (= "four" (t/lvalue [:foo :bar]))))
 
   (testing "tap!"
-    (t/tap! "one")
-    (t/tap! "two")
-    (t/tap! :foo :bar "three")
-    (t/tap! [:foo :bar] "four")
-    (Thread/sleep 1000)
+    (is (= "one" (t/tap! "one")))
+    (is (= "two" (t/tap! "two")))
+    (is (= "three" (t/tap! :foo :bar "three")))
+    (is (= "four" (t/tap! [:foo :bar] "four")))
+    (sleep)
     (is (= {[]          ["two"]
             [:foo :bar] ["four"]}
            (t/values))))
 
   (testing "pause"
     (t/pause)
-    (t/tap! :new "five")
-    (t/tap>> :new "six")
-    (Thread/sleep 1000)
+    (is (= "five" (t/tap! :new "five")))
+    (is (= "six" (t/tap>> :new "six")))
+    (sleep)
     (is (= {[]          ["two"]
             [:foo :bar] ["four"]}
            (t/values))))
 
   (testing "resume after pause"
     (t/resume)
-    (t/tap! :new "five")
-    (t/tap>> :new "six")
-    (Thread/sleep 1000)
+    (is (= "five" (t/tap! :new "five")))
+    (is (= "six" (t/tap>> :new "six")))
+    (sleep)
     (is (= {[]          ["two"]
             [:new]      ["five" "six"]
             [:foo :bar] ["four"]}
@@ -84,19 +89,19 @@
                           (t/tap! :new "five")))
     (is (thrown-with-msg? Exception #"Taplica stopped\."
                           (t/tap>> :new "six")))
-    (Thread/sleep 1000)
+    (sleep)
     (is (empty? (t/values))))
 
   (testing "resume after stop"
     (t/resume)
-    (t/tap! :new "five")
-    (t/tap>> :new "six")
-    (Thread/sleep 1000)
+    (is (= "five" (t/tap! :new "five")))
+    (is (= "six" (t/tap>> :new "six")))
+    (sleep)
     (is (= {[:new] ["five" "six"]}
            (t/values))))
 
   (testing "regular tap> does not update the atom"
     (tap> "what?")
-    (Thread/sleep 1000)
+    (sleep)
     (is (= {[:new] ["five" "six"]}
            (t/values)))))
