@@ -1,18 +1,21 @@
 # Taplica
 
+[![Clojars Project](https://img.shields.io/clojars/v/com.github.vespesa/taplica.svg)](https://clojars.org/com.github.vespesa/taplica)
+[![cljdoc badge](https://cljdoc.org/badge/com.github.vespesa/taplica)](https://cljdoc.org/d/com.github.vespesa/taplica)
+
 An extremely simple wrapper for `tap>` that taps data into an atom and
 makes it accessible from REPL. The idea is to provide no-boilerplate
 tapping support without leaving Emacs and
 [Cider](https://github.com/clojure-emacs/cider).
 
 ## Installing
-It is often good idea to make Taplica available automatically for
+It is often a good idea to make Taplica available automatically for
 every project. For example, with [Leiningen](https://leiningen.org/)
 using [lein-shorthand](https://github.com/palletops/lein-shorthand) in
 `~/.lein/profiles.clj`:
 
 ```clj
-{:user {:dependencies [[com.github.vespesa/taplica "0.0.1-SNAPSHOT"]]
+{:user {:dependencies [[com.github.vespesa/taplica "0.1.0"]]
         :plugins      [[com.gfredericks/lein-shorthand "0.4.1"]]
         :shorthand    {tap [taplica.core/tap>> taplica.core/tap!
                             taplica.core/values taplica.core/value

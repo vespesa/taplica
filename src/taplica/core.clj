@@ -1,5 +1,5 @@
 (ns taplica.core
-  "Extremely simple wrapper for `tap>` handling. The tap functions ([[tap!]] and [[tap>>]]`)
+  "Extremely simple wrapper for `tap>` handling. The tap functions ([[tap!]] and [[tap>>]])
   do the tap registration (`add-tap`) if needed. The tapped values are stored into an
   atom. Note that while [[tap!]] and [[tap>>]] are wrappers for `tap>`, the regular `tap>`
   calls do not update the atom.")
