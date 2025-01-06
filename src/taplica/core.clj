@@ -1,16 +1,19 @@
 (ns taplica.core
-  "Extremely simple wrapper for `tap>` handling. The tap functions (`tap!` and `tap>>`) do
-  the tap registration (`add-tap`) if needed. The tapped values are stored into an
-  atom. Note that while `tap!` and `tap>>` are wrappers for `tap>`, the regular `tap>`
+  "Extremely simple wrapper for `tap>` handling. The tap functions ([[tap!]] and [[tap>>]]`)
+  do the tap registration (`add-tap`) if needed. The tapped values are stored into an
+  atom. Note that while [[tap!]] and [[tap>>]] are wrappers for `tap>`, the regular `tap>`
   calls do not update the atom.")
 
 (defonce ^:dynamic ^:private  *ctrl* (atom {}))
-(defonce ^:dynamic *tapped* (atom {}))
+(defonce ^:dynamic
+  ^{:doc "Taplica atom. Typically, there is no need to access the atom
+  directly, but it is exposed just in case."}
+  *taplica* (atom {}))
 
 (defn- tap
   [{:keys [path value overwrite?] :as m}]
   (when (::taplica? m)
-    (swap! *tapped* update path
+    (swap! *taplica* update path
            (fn [v]
              (if overwrite?
                [value]
@@ -54,15 +57,15 @@
   (tap-and-add-if-needed false args))
 
 (defn pause
-  "Removes tap and does not add it on subsequent `tap!` or `tap>>` calls."
+  "Removes tap and does not add it on subsequent [[tap!]] or [[tap>>]] calls."
   []
   (remove-tap tap)
   (swap! *ctrl* assoc :added? false :state :paused)
   nil)
 
 (defn stop
-  "Removes tap and throws on subsequent `tap!` or `tap>>` calls. This is sometimes useful to
-  make sure that no taps are forgotten in the code."
+  "Removes tap and throws on subsequent [[tap!]] or [[tap>>]] calls. This is sometimes
+  useful to make sure that no taps are forgotten in the code."
   []
   (remove-tap tap)
   (swap! *ctrl* assoc :added? false :state :stopped)
@@ -75,22 +78,22 @@
   nil)
 
 (defn reset
-  "Reset taplica to its initial state. No taps, no data."
+  "Reset Taplica to its initial state. No taps, no data."
   []
   (remove-tap tap)
   (reset! *ctrl* {})
-  (reset! *tapped* {}))
+  (reset! *taplica* {}))
 
 (defn value
   "Tapped value list stored in `path`. With no arguments retuns the values in an empty
   path."
   [& path]
-  (get @*tapped* (->path path)))
+  (get @*taplica* (->path path)))
 
 (defn values
-  "Full taplica atom contents."
+  "Full Taplica atom contents."
   []
-  @*tapped*)
+  @*taplica*)
 
 (def fvalue
   "Convenience function for getting the _first_ value."
